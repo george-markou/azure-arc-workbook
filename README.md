@@ -2,7 +2,11 @@
 
 ### Demo
 
-<video src='showcase/Workbook_for_ARC_Servers-v.1.1.mp4' width=180/> | <video src='video2.mp4' width=180/>
+https://user-images.githubusercontent.com/82205061/144822863-8fb576a4-266c-49f9-b9d9-d19ef5753931.mp4
 
 ### Deployment
 How to import Gallery template https://www.cloudsma.com/2020/11/import-azure-monitor-workbooks/
+
+
+
+
