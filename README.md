@@ -1,8 +1,12 @@
 # Azure Monitor Workbook for Azure Arc-enabled Servers
 
-### Demo
+### Quick peek
+https://user-images.githubusercontent.com/82205061/144824071-2a2df20d-5a62-4eea-b9d3-8ca0134279ff.mp4
 
-<video src='showcase/Workbook_for_ARC_Servers-v.1.1.mp4' width=180/> | <video src='video2.mp4' width=180/>
 
 ### Deployment
 How to import Gallery template https://www.cloudsma.com/2020/11/import-azure-monitor-workbooks/
+
+
+
+
