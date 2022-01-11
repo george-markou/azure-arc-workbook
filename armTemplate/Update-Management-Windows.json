@@ -639,7 +639,7 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "Resources\r\n| where type == 'microsoft.hybridcompute/machines'\r\n| where properties['status'] == \"Disconnected\" or  properties['status'] == \"Connected\"\r\n| summarize count() by tostring(properties.status)",
+            "query": "Resources\r\n| where type == 'microsoft.hybridcompute/machines'\r\n| where properties['status'] != \"Connected\" or  properties['status'] == \"Connected\"\r\n| summarize count() by tostring(properties.status)",
             "size": 4,
             "color": "redBright",
             "showExportToExcel": true,
