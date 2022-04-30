@@ -31,7 +31,7 @@
               "value::all"
             ],
             "value": [
-              "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+              "/subscriptions/cb7a8f90-5950-4993-ab11-7a3ddf5b7741/resourceGroups/ARC-LAB/providers/Microsoft.OperationalInsights/workspaces/arc-lab"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
@@ -425,7 +425,7 @@
       "content": {
         "version": "KqlItem/1.0",
         "query": "Update\r\n| where TimeGenerated>ago(14h) and OSType!=\"Linux\" and (Optional==false or Classification has \"Critical\" or Classification has \"Security\") and SourceComputerId in ((Heartbeat\r\n| where TimeGenerated>ago(12h) and OSType=~\"Windows\" and notempty(Computer)\r\n| summarize arg_max(TimeGenerated, Solutions) by SourceComputerId\r\n| where Solutions has \"updates\" | distinct SourceComputerId))\r\n| summarize hint.strategy=partitioned arg_max(TimeGenerated, *) by Computer, SourceComputerId, UpdateID\r\n| where UpdateState=~\"Installed\" and Approved!=false and Computer=='{Computer}'\r\n| project Computer, Title, KBID, Classification, PublishedDate, UpdateState, Product",
-        "size": 1,
+        "size": 0,
         "timeContext": {
           "durationMs": 86400000
         },
@@ -433,7 +433,7 @@
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+          "/subscriptions/cb7a8f90-5950-4993-ab11-7a3ddf5b7741/resourceGroups/ARC-LAB/providers/Microsoft.OperationalInsights/workspaces/arc-lab"
         ]
       },
       "conditionalVisibility": {
@@ -441,7 +441,7 @@
         "comparison": "isEqualTo",
         "value": "compliance"
       },
-      "name": "query - 12"
+      "name": "query - 37"
     },
     {
       "type": 1,
@@ -462,28 +462,12 @@
         "query": "Update\r\n| where UpdateState=~\"Installed\"\r\n| distinct Computer, Title, KBID, Classification, PublishedDate, UpdateState, Product\r\n",
         "size": 0,
         "timeContext": {
-          "durationMs": 2592000000
+          "durationMs": 86400000
         },
-        "showExportToExcel": true,
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
-        ],
-        "gridSettings": {
-          "filter": true,
-          "sortBy": [
-            {
-              "itemKey": "Computer",
-              "sortOrder": 1
-            }
-          ]
-        },
-        "sortBy": [
-          {
-            "itemKey": "Computer",
-            "sortOrder": 1
-          }
+          "/subscriptions/cb7a8f90-5950-4993-ab11-7a3ddf5b7741/resourceGroups/ARC-LAB/providers/Microsoft.OperationalInsights/workspaces/arc-lab"
         ]
       },
       "conditionalVisibility": {
@@ -491,7 +475,7 @@
         "comparison": "isEqualTo",
         "value": "compliance"
       },
-      "name": "query - 14"
+      "name": "query - 37"
     },
     {
       "type": 1,
@@ -699,44 +683,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "// What data is being collected? \r\n// List the collected performance counters and object types (Process, Memory, Processor). \r\nVMComputer\r\n| where TimeGenerated>ago(1h)\r\n| distinct\r\nComputer,\r\n_ResourceId,\r\nCpus,\r\nCpuSpeed,\r\nPhysicalMemoryMB,\r\ntostring(Ipv4Addresses),\r\ntostring(Ipv4DefaultGateways), \r\ntostring(Ipv4SubnetMasks), \r\ntostring(Ipv6Addresses), \r\ntostring(MacAddresses),\r\nType,\r\nTimeZone,\r\nBootTime,\r\nVirtualizationState,\r\nVirtualMachineHypervisorId,\r\nVirtualMachineNativeName,\r\nVirtualMachineType\r\n| join kind=leftouter\r\n(\r\nPerf\r\n| where TimeGenerated > ago(1d)\r\n| where ObjectName == \"LogicalDisk\" and CounterName == \"% Free Space\" or CounterName == \"% Used Space\"\r\n| summarize (TimeGenerated, Free_Megabytes)=arg_max(TimeGenerated, CounterValue) by Computer, InstanceName\r\n| where strlen(InstanceName) ==1 or strlen(InstanceName) ==2\r\n)\r\non Computer\r\n| project \r\nComputer,\r\n_ResourceId,\r\nCpus,\r\nCpuSpeed,\r\nPhysicalMemoryMB,\r\nVolume=InstanceName,\r\nFreeDiskSpace=Free_Megabytes,\r\ntostring(Ipv4Addresses),\r\ntostring(Ipv4DefaultGateways), \r\ntostring(Ipv4SubnetMasks), \r\ntostring(Ipv6Addresses), \r\ntostring(MacAddresses),\r\nType,\r\nTimeZone,\r\nBootTime,\r\nVirtualizationState,\r\nVirtualMachineHypervisorId,\r\nVirtualMachineNativeName,\r\nVirtualMachineType\r\n| order by Computer asc",
-        "size": 1,
-        "timeContext": {
-          "durationMs": 14400000
-        },
-        "queryType": 0,
-        "resourceType": "microsoft.operationalinsights/workspaces",
-        "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
-        ],
-        "gridSettings": {
-          "filter": true,
-          "sortBy": [
-            {
-              "itemKey": "Computer",
-              "sortOrder": 1
-            }
-          ]
-        },
-        "sortBy": [
-          {
-            "itemKey": "Computer",
-            "sortOrder": 1
-          }
-        ]
-      },
-      "conditionalVisibility": {
-        "parameterName": "selectedTab",
-        "comparison": "isEqualTo",
-        "value": "query"
-      },
-      "name": "query - 20"
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == 'microsoft.hybridcompute/machines'\r\n| project\r\n\tComputerName = tostring(properties.osProfile.computerName),\r\n    FQDN = tostring(properties.dnsFqdn),\r\n\tOS = tostring(properties.osName),\r\n    OSVersion = tostring(properties.osVersion),\r\n    SKU = tostring(properties.osSku),\r\n    CloudProvider = tostring(properties.detectedProperties.cloudprovider),\r\n    Manufacturer = tostring(properties.detectedProperties.manufacturer),\r\n    Model = tostring(properties.detectedProperties.model),\r\n    AgentVersion = tostring(properties.agentVersion)",
+        "query": "Resources\r\n| where type == 'microsoft.hybridcompute/machines'\r\n| project\r\n\tComputerName = tostring(properties.osProfile.computerName),\r\n    FQDN = tostring(properties.dnsFqdn),\r\n\tOS = tostring(properties.osName),\r\n    OSName = tostring(properties.osSku),\r\n    OSVersion = tostring(properties.osVersion),\r\n    MSSQLPresent = tostring(properties.detectedProperties.mssqldiscovered), \r\n    CloudProvider = tostring(properties.detectedProperties.cloudprovider),\r\n    Manufacturer = tostring(properties.detectedProperties.manufacturer),\r\n    Model = tostring(properties.detectedProperties.model),\r\n    AgentVersion = tostring(properties.agentVersion)",
         "size": 1,
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
@@ -761,40 +708,9 @@
       "conditionalVisibility": {
         "parameterName": "selectedTab",
         "comparison": "isEqualTo",
-        "value": "query"
-      },
-      "name": "query - 23"
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"b450a68f-7605-442a-8b34-149bbceb10ab\",\"mergeType\":\"leftouter\",\"leftTable\":\"query - 20\",\"rightTable\":\"query - 23\",\"leftColumn\":\"Computer\",\"rightColumn\":\"ComputerName\"}],\"projectRename\":[{\"originalName\":\"[query - 20]._ResourceId\",\"mergedName\":\"_ResourceId\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 23].FQDN\",\"mergedName\":\"FQDN\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 23].OS\",\"mergedName\":\"OS\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 23].OSVersion\",\"mergedName\":\"OSVersion\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 23].SKU\",\"mergedName\":\"SKU\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 23].Manufacturer\",\"mergedName\":\"Manufacturer\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 23].Model\",\"mergedName\":\"Model\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].Computer\",\"mergedName\":\"Computer\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].Cpus\",\"mergedName\":\"Cpus\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].CpuSpeed\",\"mergedName\":\"CpuSpeed\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].PhysicalMemoryMB\",\"mergedName\":\"PhysicalMemoryMB\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].Volume\",\"mergedName\":\"Volume\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].FreeSpace\",\"mergedName\":\"FreeSpace\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].FreeDiskSpace\",\"mergedName\":\"FreeDiskSpace\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].Ipv4Addresses\",\"mergedName\":\"Ipv4Addresses\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].Ipv4DefaultGateways\",\"mergedName\":\"Ipv4DefaultGateways\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].Ipv4SubnetMasks\",\"mergedName\":\"Ipv4SubnetMasks\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].MacAddresses\",\"mergedName\":\"MacAddresses\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].Ipv6Addresses\",\"mergedName\":\"Ipv6Addresses\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 20].Type\",\"mergedName\":\"Type\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].TimeZone\",\"mergedName\":\"TimeZone\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].BootTime\",\"mergedName\":\"BootTime\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].VirtualizationState\",\"mergedName\":\"VirtualizationState\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].VirtualMachineHypervisorId\",\"mergedName\":\"VirtualMachineHypervisorId\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].VirtualMachineNativeName\",\"mergedName\":\"VirtualMachineNativeName\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 20].VirtualMachineType\",\"mergedName\":\"VirtualMachineType\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 23].CloudProvider\",\"mergedName\":\"CloudProvider\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 23].AgentVersion\",\"mergedName\":\"AgentVersion\",\"fromId\":\"b450a68f-7605-442a-8b34-149bbceb10ab\"},{\"originalName\":\"[query - 23].ComputerName\"}]}",
-        "size": 1,
-        "showExportToExcel": true,
-        "queryType": 7,
-        "gridSettings": {
-          "filter": true,
-          "sortBy": [
-            {
-              "itemKey": "$gen_link__ResourceId_0",
-              "sortOrder": 1
-            }
-          ]
-        },
-        "sortBy": [
-          {
-            "itemKey": "$gen_link__ResourceId_0",
-            "sortOrder": 1
-          }
-        ]
-      },
-      "conditionalVisibility": {
-        "parameterName": "selectedTab",
-        "comparison": "isEqualTo",
         "value": "inventory"
       },
-      "name": "query - 24"
+      "name": "query - 23"
     },
     {
       "type": 1,
@@ -816,7 +732,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "Resources\r\n| where type == 'microsoft.hybridcompute/machines'\r\n| where properties['status'] == \"Disconnected\"",
+        "query": "Resources\r\n| where type == 'microsoft.hybridcompute/machines'\r\n| where properties['status'] == \"Disconnected\"\r\n| project\r\n\tComputerName = tostring(properties.osProfile.computerName),\r\n    FQDN = tostring(properties.dnsFqdn),\r\n\tOS = tostring(properties.osName),\r\n    OSName = tostring(properties.osSku),\r\n    OSVersion = tostring(properties.osVersion),\r\n    MSSQLPresent = tostring(properties.detectedProperties.mssqldiscovered), \r\n    CloudProvider = tostring(properties.detectedProperties.cloudprovider),\r\n    Manufacturer = tostring(properties.detectedProperties.manufacturer),\r\n    Model = tostring(properties.detectedProperties.model),\r\n    AgentVersion = tostring(properties.agentVersion)",
         "size": 1,
         "showExportToExcel": true,
         "queryType": 1,
@@ -864,7 +780,7 @@
       "content": {
         "version": "KqlParameterItem/1.0",
         "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+          "{Workspaces}"
         ],
         "parameters": [
           {
@@ -878,10 +794,7 @@
             "delimiter": ",",
             "query": "Heartbeat\r\n| summarize arg_max(TimeGenerated, Computer) by Computer\r\n| project Computer",
             "crossComponentResources": [
-              "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
-            ],
-            "value": [
-              "value::all"
+              "{Workspaces}"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
@@ -896,6 +809,7 @@
             "resourceType": "microsoft.operationalinsights/workspaces"
           },
           {
+            "id": "1e641b3e-78ff-40ed-931d-f898063ddffa",
             "version": "KqlParameterItem/1.0",
             "name": "Publisher",
             "type": 5,
@@ -905,7 +819,7 @@
             "delimiter": ",",
             "query": "ConfigurationData\r\n| where ConfigDataType == \"Software\"\r\n| where Computer in~ ({Computer}) or '*' in~ ({Computer}) \r\n| distinct Publisher",
             "crossComponentResources": [
-              "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+              "{Workspaces}"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
@@ -920,8 +834,7 @@
             },
             "defaultValue": "value::all",
             "queryType": 0,
-            "resourceType": "microsoft.operationalinsights/workspaces",
-            "id": "1e641b3e-78ff-40ed-931d-f898063ddffa"
+            "resourceType": "microsoft.operationalinsights/workspaces"
           },
           {
             "id": "53e2b6f5-fe1a-4306-854b-49ce5b0a4adc",
@@ -934,7 +847,7 @@
             "delimiter": ",",
             "query": "ConfigurationData\r\n| where ConfigDataType == \"Software\"\r\n| where Computer in~ ({Computer}) or '*' in~ ({Computer}) \r\n| distinct SoftwareName",
             "crossComponentResources": [
-              "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+              "{Workspaces}"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
@@ -984,7 +897,7 @@
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+          "{Workspaces}"
         ],
         "visualization": "tiles",
         "tileSettings": {
@@ -1022,7 +935,7 @@
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+          "{Workspaces}"
         ],
         "gridSettings": {
           "filter": true,
@@ -1076,7 +989,7 @@
       "content": {
         "version": "KqlParameterItem/1.0",
         "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+          "{Workspaces}"
         ],
         "parameters": [
           {
@@ -1090,24 +1003,22 @@
             "delimiter": ",",
             "query": "ConfigurationData\r\n| summarize arg_max(TimeGenerated, _ResourceId) by Computer\r\n| project Computer",
             "crossComponentResources": [
-              "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+              "{Workspaces}"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
                 "value::1",
                 "value::5",
                 "value::all"
-              ]
+              ],
+              "showDefault": false
             },
             "timeContext": {
               "durationMs": 86400000
             },
             "defaultValue": "value::5",
             "queryType": 0,
-            "resourceType": "microsoft.operationalinsights/workspaces",
-            "value": [
-              "value::all"
-            ]
+            "resourceType": "microsoft.operationalinsights/workspaces"
           },
           {
             "id": "cf70f185-0375-4240-a0bc-2e93b859a0ac",
@@ -1120,10 +1031,7 @@
             "delimiter": ",",
             "query": "ConfigurationData\r\n| where ConfigDataType == \"WindowsServices\" or ConfigDataType == \"Daemons\"\r\n| where Computer in~ ({Computer}) or '*' in~ ({Computer}) \r\n| distinct SvcName",
             "crossComponentResources": [
-              "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
-            ],
-            "value": [
-              "value::all"
+              "{Workspaces}"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
@@ -1166,7 +1074,7 @@
         "queryType": 0,
         "resourceType": "microsoft.operationalinsights/workspaces",
         "crossComponentResources": [
-          "/subscriptions/662004f2-f222-41b8-b465-64895d8a46f7/resourceGroups/AZLAB-RG/providers/Microsoft.OperationalInsights/workspaces/arclab-la"
+          "{Workspaces}"
         ],
         "gridSettings": {
           "filter": true
